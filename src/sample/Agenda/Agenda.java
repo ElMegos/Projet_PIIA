@@ -1,5 +1,6 @@
 package sample.Agenda;
 
+import javafx.geometry.Pos;
 import sample.Main;
 //import sample.Weather.Weather;
 //import sample.Plante.Plante;
@@ -41,11 +42,11 @@ public class Agenda extends BorderPane {
         /* Examples of filters & events */
         filters.add(new Filter("Fac", Color.GREEN));
         filters.add(new Filter("Travail", Color.BLUEVIOLET));
-        events.add(new Event(filters.get(1), LocalDate.now().with(week[0]), 12, "Evenement 1", ""));
-        events.add(new Event(filters.get(2), LocalDate.now().with(week[5]), 12, 16, "Evenement 2", "plante"));
-        events.add(new Event(filters.get(2), LocalDate.of(2021, 5, 12), 12, 16, "Evenement 3", ""));
+        //events.add(new Event(filters.get(1), LocalDate.now().with(week[0]), 12, "Evenement 1", ""));
+        //events.add(new Event(filters.get(2), LocalDate.now().with(week[5]), 12, 16, "Evenement 2", "plante"));
+        //events.add(new Event(filters.get(2), LocalDate.of(2021, 5, 12), 12, 16, "Evenement 3", ""));
 
-        this.setBackground(new Background(new BackgroundFill(Color.rgb(30, 30, 30), CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), CornerRadii.EMPTY, Insets.EMPTY)));
         this.left = left;
         this.stage = stage;
         this.setLeft(left);
@@ -94,17 +95,18 @@ public class Agenda extends BorderPane {
 
     private void bigAgenda() {
         VBox names = new VBox();
-        for (int i = -1; i < 24; i++) {
-            Text txt;
-            if (i == -1) {
-                txt = new Text("");
-                txt.setFont(new Font(7));
-            } else {
-                txt = new Text(i + ":00");
-                txt.setFont(new Font(23));
+        for (int i = -3; i < 18; i++) {
+            Text horaire;
+            if (i == -1 || i==-2 || i==-3) {
+                horaire = new Text(" ");
+                horaire.setFont(new Font(11));
             }
-            txt.setFill(Color.WHITE);
-            names.getChildren().add(txt);
+            else {
+                horaire = new Text(i+6 + "h");
+                horaire.setFont(new Font(27));
+            }
+            horaire.setFill(Color.LIGHTBLUE);
+            names.getChildren().add(horaire);
         }
 
         days.add(names);
@@ -116,21 +118,21 @@ public class Agenda extends BorderPane {
 
             /* Adding the name of the week */
             dayCell.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
-            dayCell.setText(DateTimeFormatter.ofPattern("EEEE dd MMM yyyy", Locale.FRENCH).format(datePicker.getValue().with(week[i])), "");
+            dayCell.ajoutText(DateTimeFormatter.ofPattern("            EEEE dd MMMM", Locale.FRENCH).format(datePicker.getValue().with(week[i])), "");
             box.getChildren().add(dayCell);
 
             /* Adding other cells */
-            for (int j = 0; j < 24; j++) {
+            for (int j = 0; j < 18; j++) {
                 Cell cell = new Cell(LocalDate.now().with(week[i]), j, stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
                         .equals(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(datePicker.getValue().with(week[i]))));
                 cell.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
 
-                /* Displaying the event if there is one
+                /* Displaying the event if there is one */
                 for (Event e : events) {
                     if (e.getDay().compareTo(datePicker.getValue().with(week[i])) == 0 && e.getStartingTime() <= j && e.getEndingTime() > j && checkIfFilterIsTicked(e.getFilter())) {
-                        cell.addEvent(e, e.getStartingTime() == j);
+                        cell.ajoutEvent(e, e.getStartingTime() == j);
                     }
-                }*/
+                }
                 box.getChildren().add(cell);
             }
             days.add(box);
@@ -152,10 +154,16 @@ public class Agenda extends BorderPane {
         bigAgenda();
     }
 
+    /**
+     * Affichage du calendrier
+     */
     private void littleAgenda() {
+
+
         DatePickerSkin datePickerSkin = new DatePickerSkin(datePicker);
         datePickerSkin.getPopupContent().setOnMouseClicked(mouseEvent -> {
             center = new HBox();
+            center.setAlignment(Pos.CENTER_LEFT);
             days.clear();
             bigAgenda();
         });
@@ -163,7 +171,6 @@ public class Agenda extends BorderPane {
     }
 
     private void setButtonActions() {
-        System.out.println("test");
         //left.getChildren().get(1).setOnMouseClicked(mouseEvent -> getScene().setRoot(plante));
         //left.getChildren().get(2).setOnMouseClicked(mouseEvent -> getScene().setRoot(weather));
     }
@@ -187,4 +194,3 @@ public class Agenda extends BorderPane {
     */
 
 }
-

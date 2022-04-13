@@ -1,7 +1,6 @@
 package sample.Agenda;
 
 import javafx.geometry.Insets;
-import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -19,9 +18,10 @@ public class Cell extends Region{
     private final Agenda agenda;
     private final ArrayList<Filter> filters;
 
+    //Constructeur des cellules pour les dates
     public Cell(Stage stage, Agenda agenda, ArrayList<Filter> filters, boolean currentDay){
         this.hasEvent = false;
-        setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         this.stage = stage;
         this.agenda = agenda;
         this.filters = filters;
@@ -30,9 +30,10 @@ public class Cell extends Region{
         updateOnClick();
     }
 
+    //Constructeur pour le reste des cellules
     public Cell(LocalDate date, int startingTime, Stage stage, Agenda agenda, ArrayList<Filter> filters, boolean currentDay) {
         this.hasEvent = false;
-        setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         this.date = date;
         this.startingTime = startingTime;
         this.stage = stage;
@@ -43,20 +44,26 @@ public class Cell extends Region{
         updateOnClick();
     }
 
-    public void setText(String text, String plant) {
+    /**
+     * Ajoute le texte ou une plante mis en paramètre
+     * @param text texte voulu
+     * @param plant plante voulu
+     */
+    public void ajoutText(String text, String plant) {
         this.hasEvent = true;
         updateOnClick();
         Text txt = new Text(text);
-        txt.setFill(Color.WHITE);
+        txt.setFill(Color.BLACK);
         VBox box = new VBox(txt);
         if (!plant.equals("")) box.getChildren().add(new Text(plant));
         getChildren().setAll(box);
     }
 
-    public void addEvent(Event e, boolean hasLabel) {
+    public void ajoutEvent(Event e, boolean hasLabel) {
         setBackground(new Background(new BackgroundFill(e.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
-        if (hasLabel) setText(e.getLabel(), e.getPlantName());
+        if (hasLabel) ajoutText(e.getLabel(), e.getPlantName());
     }
+
 
     private void updateOnClick() {
         if (!this.hasEvent)

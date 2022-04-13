@@ -2,6 +2,7 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -18,8 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    public final static int largeur = 2366;
-    public final static int hauteur = 768;
+    public final static int largeur = 1400;
+    public final static int hauteur = 800;
 
 
     @Override
@@ -27,12 +28,13 @@ public class Main extends Application {
         Agenda a = new Agenda(createLeftMenu(), stage);
 
         Scene scene = new Scene(a, largeur, hauteur);
-        stage.setTitle("Agenda Horticulture");
+        stage.setTitle("Agenda Etudiant Jardinage");
         stage.setScene(scene);
         stage.show();
 
 
     }
+
 
     private VBox createLeftMenu() {
         Button b1 = new Button("agenda");
@@ -47,14 +49,11 @@ public class Main extends Application {
         b2.setTextFill(Color.BLACK);
         b2.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        Button b3 = new Button("meteo");
-        b3.setPrefSize(225, 50);
-        b3.setBackground(new Background(new BackgroundFill(Color.LIGHTCYAN, CornerRadii.EMPTY, Insets.EMPTY)));
-        b3.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        b3.setTextFill(Color.BLACK);
 
-        return new VBox(b1, b2, b3);
+        return new VBox(b1, b2);
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
