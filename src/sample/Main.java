@@ -38,13 +38,13 @@ public class Main extends Application {
 
     private VBox createLeftMenu() {
 
-        Button b1 = new Button("agenda");
+        Button b1 = new Button("Agenda");
         b1.setPrefSize(225, 50);
         b1.setBackground(new Background(new BackgroundFill(Color.rgb(60, 60, 60), CornerRadii.EMPTY, Insets.EMPTY)));
         b1.setTextFill(Color.WHITE);
         b1.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        Button b2 = new Button("plante");
+        Button b2 = new Button("Plante");
         b2.setPrefSize(225, 50);
         b2.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
         b2.setTextFill(Color.BLACK);

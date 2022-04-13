@@ -39,11 +39,14 @@ public class Agenda extends BorderPane {
     public Agenda(VBox left, final Stage stage) {
         filters.add(new Filter("Pas de filtre", Color.GREY)); // Always here
 
-        /* Examples of filters & events */
-        filters.add(new Filter("Fac", Color.GREEN));
-        filters.add(new Filter("Travail", Color.BLUEVIOLET));
-        events.add(new Event(filters.get(1), LocalDate.now().with(week[0]), 6, "Evenement 1", ""));
-        events.add(new Event(filters.get(2), LocalDate.now().with(week[5]), 12, 16, "Evenement 2", "plante"));
+        //Ajout des filtres
+        filters.add(new Filter("Fac", Color.BLUEVIOLET));
+        filters.add(new Filter("Plante", Color.GREEN));
+        filters.add(new Filter("Personnel",Color.BLUE));
+
+
+        events.add(new Event(filters.get(2), LocalDate.now().with(week[0]), 6,8, "Cours de Bio-magie", ""));
+        events.add(new Event(filters.get(1), LocalDate.now().with(week[5]), 12, 16, "Evenement 2", "plante"));
         //events.add(new Event(filters.get(2), LocalDate.of(2021, 5, 12), 12, 16, "Evenement 3", ""));
 
         this.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -70,9 +73,9 @@ public class Agenda extends BorderPane {
     private void checkBoxes() {
         VBox box = new VBox();
         for (Filter f : filters) {
-            CheckBox checkBox = new CheckBox(f.getName());
-            checkBox.setTextFill(f.getColor());
-            checkBox.setSelected(f.isTicked());
+            CheckBox checkBox = new CheckBox(f.getNom());
+            checkBox.setTextFill(f.getCouleur());
+            checkBox.setSelected(f.isEstCoche());
             checkBox.setPrefWidth(left.getPrefWidth());
             checkBox.setOnMouseClicked(mouseEvent -> {
                 if (checkBox.isSelected()) f.tick();
@@ -88,7 +91,7 @@ public class Agenda extends BorderPane {
 
     private boolean checkIfFilterIsTicked(Filter filter) {
         for (Filter f : filters) {
-            if (f == filter && f.isTicked()) return true;
+            if (f == filter && f.isEstCoche()) return true;
         }
         return false;
     }
@@ -122,13 +125,13 @@ public class Agenda extends BorderPane {
 
             VBox box = new VBox();
 
-            CelluleDate dayCellule2 = new CelluleDate(stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
+            CelluleDate dayCellule = new CelluleDate(stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
                     .equals(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(datePicker.getValue().with(week[i]))));
 
             /* Adding the name of the week */
-            dayCellule2.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
-            dayCellule2.ajoutText(DateTimeFormatter.ofPattern("            EEEE dd MMMM", Locale.FRENCH).format(datePicker.getValue().with(week[i])), "");
-            box.getChildren().add(dayCellule2);
+            dayCellule.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
+            dayCellule.ajoutText(DateTimeFormatter.ofPattern("            EEEE dd MMMM", Locale.FRENCH).format(datePicker.getValue().with(week[i])), "");
+            box.getChildren().add(dayCellule);
 
             /* Adding other cells */
             for (int j = 0; j < 18; j++) {
@@ -138,8 +141,8 @@ public class Agenda extends BorderPane {
 
                 /* Displaying the event if there is one */
                 for (Event e : events) {
-                    if (e.getDay().compareTo(datePicker.getValue().with(week[i])) == 0 && e.getStartingTime() <= j && e.getEndingTime() > j && checkIfFilterIsTicked(e.getFilter())) {
-                        cellule.ajoutEvent(e, e.getStartingTime() == j);
+                    if (e.getDay().compareTo(datePicker.getValue().with(week[i])) == 0 && e.getDebutEvent() <= j && e.getFinEvent() > j && checkIfFilterIsTicked(e.getFiltre())) {
+                        cellule.ajoutEvent(e, e.getDebutEvent() == j);
                     }
                 }
                 box.getChildren().add(cellule);
@@ -172,7 +175,7 @@ public class Agenda extends BorderPane {
         DatePickerSkin datePickerSkin = new DatePickerSkin(datePicker);
         datePickerSkin.getPopupContent().setOnMouseClicked(mouseEvent -> {
             center = new HBox();
-            center.setAlignment(Pos.CENTER_LEFT);
+            center.setAlignment(Pos.BOTTOM_LEFT);
             days.clear();
             bigAgenda();
         });

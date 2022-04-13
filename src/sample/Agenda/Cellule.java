@@ -15,23 +15,32 @@ public class Cellule extends Region{
      * Var : Date de la cellule
      */
     private LocalDate date;
-    private int startingTime;
 
     /**
-     * Var : SI la cellule a un event ou non
+     * Var : Début de l'evenement
+     */
+    private int debutEvent;
+
+    /**
+     * Var : Si la cellule a un event ou non
      */
     private boolean hasEvent;
+
     private final Stage stage;
     private final Agenda agenda;
+
+    /**
+     * Const : Un filtre pour chaque cellule
+     */
     private final ArrayList<Filter> filters;
 
 
     //Constructeur pour le reste des cellules
-    public Cellule(LocalDate date, int startingTime, Stage stage, Agenda agenda, ArrayList<Filter> filters, boolean currentDay) {
+    public Cellule(LocalDate date, int debutEvent, Stage stage, Agenda agenda, ArrayList<Filter> filters, boolean currentDay) {
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         this.hasEvent = false;
         this.date = date;
-        this.startingTime = startingTime;
+        this.debutEvent = debutEvent;
         this.stage = stage;
         this.agenda = agenda;
         this.filters = filters;

@@ -2,7 +2,6 @@ package sample.Agenda;
 
 
 import javafx.scene.paint.Color;
-
 import java.time.LocalDate;
 
 public class Event {
@@ -15,12 +14,12 @@ public class Event {
     /**
      * Var : Début de l'evenement
      */
-    private final int startingTime;
+    private final int debutEvent;
 
     /**
      * Var : Fin de l'evenement
      */
-    private final int endingTime;
+    private final int finEvent;
 
     /**
      * Var : Nom de l'evenement
@@ -30,55 +29,77 @@ public class Event {
     /**
      * Var : Filtre parmis Fac , Plante , Personnel
      */
-    private final Filter filter;
+    private final Filter filtre;
 
     /**
      * Var : Nom de la plante
      */
     private final String NomPlante;
 
-    public Event(Filter filter, LocalDate date, int startingTime, int endingTime, String nom, String NomPlante) {
-        this.filter = filter;
+    //Constructeur de la classe
+    public Event(Filter filtre, LocalDate date, int debutEvent, int finEvent, String nom, String NomPlante) {
+
         this.date = date;
-        this.startingTime = startingTime;
-        this.endingTime = endingTime;
+        this.debutEvent = debutEvent;
+        this.finEvent = finEvent;
         this.nom = nom;
+        this.filtre = filtre;
         this.NomPlante = NomPlante;
+
     }
 
-    public Event(Filter filter, LocalDate date, int startingTime, String label, String plantName) {
-        this.filter = filter;
-        this.date = date;
-        this.startingTime = startingTime;
-        this.endingTime = startingTime + 1;
-        this.nom = label;
-        this.NomPlante = plantName;
-    }
-
+    /**
+     * RecupereReturn la couleur du filtre
+     * @return Color du filtre
+     */
     public Color getColor() {
-        return filter.getColor();
+        return filtre.getCouleur();
     }
 
+    /**
+     * Recupere et retourne la date de l'evenement
+     * @return Date de l'evenement
+     */
     public LocalDate getDay() {
         return date;
     }
 
-    public int getStartingTime() {
-        return startingTime;
+    /**
+     * Recupere et retourne la date du debut de l'evenement
+     * @return Date du debut de l'evenement
+     */
+    public int getDebutEvent() {
+        return debutEvent;
     }
 
-    public int getEndingTime() {
-        return endingTime;
+    /**
+     * Recupere et retourne la date de la fin de l'evenement
+     * @return Date de la fin de l'evenement
+     */
+    public int getFinEvent() {
+        return finEvent;
     }
 
+    /**
+     * Recupere et retourne le nom de l'evenement
+     * @return Nom de l'evenement
+     */
     public String getNom() {
         return nom;
     }
 
-    public Filter getFilter() {
-        return filter;
+    /**
+     * Recupere et retourne le filtre de l'evenement
+     * @return Filtre de l'evenement
+     */
+    public Filter getFiltre() {
+        return filtre;
     }
 
+    /**
+     * Recupere et retourne le nom de plante
+     * @return Nom de la plante
+     */
     public String getNomPlante() {
         return NomPlante;
     }
