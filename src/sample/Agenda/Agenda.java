@@ -25,19 +25,49 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class Agenda extends BorderPane {
+
+    /**
+     * Const : Jour de la semaine
+     */
     public final static DayOfWeek[] week = new DayOfWeek[]{DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
+
     //private Plante plante;
+
     //private Weather weather;
-    private final VBox left;
+
+
+    /**
+     *  Var : HBox contenant tout les widgets
+     */
+    private final HBox WidgetMenu;
+
+    /**
+     * Var : HBox de
+     */
     private HBox center = new HBox();
+
+
     private final DatePicker datePicker = new DatePicker(LocalDate.now());
-    private final ArrayList<VBox> days = new ArrayList<>();
+
+    /**
+     * Var : ArrayList contenant l'agenda de la semaine
+     */
+    private final ArrayList<VBox> agenda = new ArrayList<>();
+
+    /**
+     * Var : ArrayList contenant les events
+     */
     private final ArrayList<Event> events = new ArrayList<>();
+
+    /**
+     * Var : ArrayList contenant les filtres
+     */
     private final ArrayList<Filter> filters = new ArrayList<>();
+
     private final Stage stage;
 
-    public Agenda(VBox left, final Stage stage) {
-        filters.add(new Filter("Pas de filtre", Color.GREY)); // Always here
+    //Constructeur de la classe
+    public Agenda(HBox WidgetMenu, final Stage stage) {
 
         //Ajout des filtres
         filters.add(new Filter("Fac", Color.BLUEVIOLET));
@@ -47,16 +77,24 @@ public class Agenda extends BorderPane {
 
         events.add(new Event(filters.get(2), LocalDate.now().with(week[0]), 6,8, "Cours de Bio-magie", ""));
         events.add(new Event(filters.get(1), LocalDate.now().with(week[5]), 12, 16, "Evenement 2", "plante"));
-        //events.add(new Event(filters.get(2), LocalDate.of(2021, 5, 12), 12, 16, "Evenement 3", ""));
+        events.add(new Event(filters.get(0), LocalDate.of(2022, 4, 12), 12, 16, "Evenement 3", ""));
 
         this.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), CornerRadii.EMPTY, Insets.EMPTY)));
-        this.left = left;
+
+        //Set le menu des widget en bas
+        this.WidgetMenu = WidgetMenu;
+        this.setBottom(WidgetMenu);
+        WidgetMenu.setAlignment(Pos.TOP_CENTER);
+
+
+
         this.stage = stage;
-        this.setLeft(left);
+
         setButtonActions();
-        littleAgenda();
+        Calendrier();
         filterButton();
         checkBoxes();
+        AjoutHeure();
         bigAgenda();
     }
 
@@ -67,7 +105,7 @@ public class Agenda extends BorderPane {
         button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         button.setTextFill(Color.WHITE);
         //button.setOnMouseClicked(mouseEvent -> new PopUp(stage, new FilterPopUp(this), "Createur de filtre"));
-        left.getChildren().add(button);
+        WidgetMenu.getChildren().add(button);
     }
 
     private void checkBoxes() {
@@ -76,17 +114,17 @@ public class Agenda extends BorderPane {
             CheckBox checkBox = new CheckBox(f.getNom());
             checkBox.setTextFill(f.getCouleur());
             checkBox.setSelected(f.isEstCoche());
-            checkBox.setPrefWidth(left.getPrefWidth());
+            checkBox.setPrefWidth(WidgetMenu.getPrefWidth());
             checkBox.setOnMouseClicked(mouseEvent -> {
                 if (checkBox.isSelected()) f.tick();
                 else f.unTick();
                 center = new HBox();
-                days.clear();
+                agenda.clear();
                 bigAgenda();
             });
             box.getChildren().add(checkBox);
         }
-        left.getChildren().add(box);
+        WidgetMenu.getChildren().add(box);
     }
 
     private boolean checkIfFilterIsTicked(Filter filter) {
@@ -97,13 +135,14 @@ public class Agenda extends BorderPane {
     }
 
     /**
-     * Création et affichage de toute les cellules de l'agenda
+     * Ajoute les heures pour l'agenda
      */
-    private void bigAgenda() {
+    private void AjoutHeure(){
+        //On utilise une Vbox car on veux les heures sur une colonne vertical
         VBox names = new VBox();
 
         //Affichage des horaires sur le côté gauche de l'agenda
-        for (int i = -3; i < 18; i++) {
+        for (int i = -3; i < 19; i++) {
             Text horaire;
             //Décalage nécessaire pour un bon affichage
             if (i == -1 || i==-2 || i==-3) {
@@ -112,32 +151,44 @@ public class Agenda extends BorderPane {
             }
             //Affichage des horaires une fois le décalage fait
             else {
-                horaire = new Text(i+6 + "h");
+                horaire = new Text(i+5 + "h");
                 horaire.setFont(new Font(27));
             }
             horaire.setFill(Color.LIGHTBLUE);
             names.getChildren().add(horaire);
         }
 
-        days.add(names);
+        agenda.add(names);
+    }
+
+
+    /**
+     * Création et affichage de toute les cellules de l'agenda
+     */
+    private void bigAgenda() {
+
+        VBox names = new VBox();
 
         for (int i = 0; i < 7; i++) {
 
             VBox box = new VBox();
 
+
             CelluleDate dayCellule = new CelluleDate(stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
                     .equals(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(datePicker.getValue().with(week[i]))));
 
-            /* Adding the name of the week */
-            dayCellule.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
+            // Adding the name of the week
+            dayCellule.setPrefSize((Main.largeur - WidgetMenu.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
             dayCellule.ajoutText(DateTimeFormatter.ofPattern("            EEEE dd MMMM", Locale.FRENCH).format(datePicker.getValue().with(week[i])), "");
             box.getChildren().add(dayCellule);
 
-            /* Adding other cells */
-            for (int j = 0; j < 18; j++) {
+
+
+            // Adding other cells
+            for (int j = 0; j < 17; j++) {
                 Cellule cellule = new Cellule(LocalDate.now().with(week[i]), j, stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
                         .equals(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(datePicker.getValue().with(week[i]))));
-                cellule.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
+                cellule.setPrefSize((Main.largeur - WidgetMenu.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
 
                 /* Displaying the event if there is one */
                 for (Event e : events) {
@@ -147,39 +198,44 @@ public class Agenda extends BorderPane {
                 }
                 box.getChildren().add(cellule);
             }
-            days.add(box);
+            agenda.add(box);
         }
-        center.getChildren().addAll(days);
+        center.getChildren().addAll(agenda);
         setCenter(center);
     }
 
     public void createNewFilter(Filter f) {
         filters.add(f);
-        left.getChildren().remove(5);
+        WidgetMenu.getChildren().remove(5);
         checkBoxes();
     }
 
     public void createNewEvent(Event e) {
         this.events.add(e);
         center = new HBox();
-        days.clear();
+        agenda.clear();
         bigAgenda();
     }
 
     /**
      * Affichage du calendrier
      */
-    private void littleAgenda() {
+    private void Calendrier() {
 
+        HBox test = new HBox();
 
         DatePickerSkin datePickerSkin = new DatePickerSkin(datePicker);
         datePickerSkin.getPopupContent().setOnMouseClicked(mouseEvent -> {
             center = new HBox();
-            center.setAlignment(Pos.BOTTOM_LEFT);
-            days.clear();
+            //center.setAlignment(Pos.BOTTOM_LEFT);
+            agenda.clear();
             bigAgenda();
         });
-        left.getChildren().add(datePickerSkin.getPopupContent());
+        test.getChildren().add(datePickerSkin.getPopupContent());
+        test.setAlignment(Pos.BOTTOM_LEFT);
+        setLeft(test);
+        WidgetMenu.getChildren().add(test);
+
     }
 
     private void setButtonActions() {
