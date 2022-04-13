@@ -37,6 +37,7 @@ public class Main extends Application {
 
 
     private VBox createLeftMenu() {
+
         Button b1 = new Button("agenda");
         b1.setPrefSize(225, 50);
         b1.setBackground(new Background(new BackgroundFill(Color.rgb(60, 60, 60), CornerRadii.EMPTY, Insets.EMPTY)));

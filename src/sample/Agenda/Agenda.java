@@ -42,8 +42,8 @@ public class Agenda extends BorderPane {
         /* Examples of filters & events */
         filters.add(new Filter("Fac", Color.GREEN));
         filters.add(new Filter("Travail", Color.BLUEVIOLET));
-        //events.add(new Event(filters.get(1), LocalDate.now().with(week[0]), 12, "Evenement 1", ""));
-        //events.add(new Event(filters.get(2), LocalDate.now().with(week[5]), 12, 16, "Evenement 2", "plante"));
+        events.add(new Event(filters.get(1), LocalDate.now().with(week[0]), 6, "Evenement 1", ""));
+        events.add(new Event(filters.get(2), LocalDate.now().with(week[5]), 12, 16, "Evenement 2", "plante"));
         //events.add(new Event(filters.get(2), LocalDate.of(2021, 5, 12), 12, 16, "Evenement 3", ""));
 
         this.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -93,14 +93,21 @@ public class Agenda extends BorderPane {
         return false;
     }
 
+    /**
+     * Création et affichage de toute les cellules de l'agenda
+     */
     private void bigAgenda() {
         VBox names = new VBox();
+
+        //Affichage des horaires sur le côté gauche de l'agenda
         for (int i = -3; i < 18; i++) {
             Text horaire;
+            //Décalage nécessaire pour un bon affichage
             if (i == -1 || i==-2 || i==-3) {
                 horaire = new Text(" ");
                 horaire.setFont(new Font(11));
             }
+            //Affichage des horaires une fois le décalage fait
             else {
                 horaire = new Text(i+6 + "h");
                 horaire.setFont(new Font(27));
@@ -112,28 +119,30 @@ public class Agenda extends BorderPane {
         days.add(names);
 
         for (int i = 0; i < 7; i++) {
+
             VBox box = new VBox();
-            Cell dayCell = new Cell(stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
+
+            CelluleDate dayCellule2 = new CelluleDate(stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
                     .equals(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(datePicker.getValue().with(week[i]))));
 
             /* Adding the name of the week */
-            dayCell.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
-            dayCell.ajoutText(DateTimeFormatter.ofPattern("            EEEE dd MMMM", Locale.FRENCH).format(datePicker.getValue().with(week[i])), "");
-            box.getChildren().add(dayCell);
+            dayCellule2.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
+            dayCellule2.ajoutText(DateTimeFormatter.ofPattern("            EEEE dd MMMM", Locale.FRENCH).format(datePicker.getValue().with(week[i])), "");
+            box.getChildren().add(dayCellule2);
 
             /* Adding other cells */
             for (int j = 0; j < 18; j++) {
-                Cell cell = new Cell(LocalDate.now().with(week[i]), j, stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
+                Cellule cellule = new Cellule(LocalDate.now().with(week[i]), j, stage, this, filters, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.now())
                         .equals(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(datePicker.getValue().with(week[i]))));
-                cell.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
+                cellule.setPrefSize((Main.largeur - left.getPrefWidth() - names.getPrefWidth()) / 7, Main.hauteur / 25f);
 
                 /* Displaying the event if there is one */
                 for (Event e : events) {
                     if (e.getDay().compareTo(datePicker.getValue().with(week[i])) == 0 && e.getStartingTime() <= j && e.getEndingTime() > j && checkIfFilterIsTicked(e.getFilter())) {
-                        cell.ajoutEvent(e, e.getStartingTime() == j);
+                        cellule.ajoutEvent(e, e.getStartingTime() == j);
                     }
                 }
-                box.getChildren().add(cell);
+                box.getChildren().add(cellule);
             }
             days.add(box);
         }
