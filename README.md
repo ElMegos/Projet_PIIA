@@ -21,7 +21,7 @@ git clone https://github.com/username/agenda-etudiant-horticulture.git
 Une fois que l'application est lancée, vous pouvez naviguer entre l'agenda, la to-do list et la fiche de plante en utilisant les boutons de navigation. Pour ajouter un événement dans l'agenda, cliquez sur le bouton "Ajouter un événement" et remplissez le formulaire correspondant. Pour ajouter une tâche dans la to-do list, cliquez sur le bouton "Ajouter une tâche" et remplissez le formulaire correspondant. Pour ajouter une plante dans la fiche de plante, cliquez sur le bouton "Ajouter une plante" et remplissez le formulaire correspondant.
 
 ## Auteurs
-Yassine MSILINI
+Yassine MSILINI |
 Mickail YILMAZ
 
 
